@@ -28,6 +28,10 @@ CREATE TABLE IF NOT EXISTS predictions (
 """)
 conn.commit()
 
+cursor.execute("DELETE FROM predictions")
+conn.commit()
+print("tabla 'predictions' reiniciada")
+
 # Cargar modelo
 model = joblib.load("models/happiness_model.pkl")
 
