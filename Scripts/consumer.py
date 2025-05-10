@@ -44,7 +44,7 @@ consumer = KafkaConsumer(
     group_id='happiness_group'
 )
 
-print("📥 Esperando mensajes desde Kafka...\n")
+print("Esperando mensajes desde Kafka...\n")
 
 # Consumir mensajes
 for message in consumer:
