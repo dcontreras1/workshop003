@@ -21,7 +21,6 @@ CREATE TABLE IF NOT EXISTS predictions (
     social_support REAL,
     life_expectancy REAL,
     freedom REAL,
-    generosity REAL,
     corruption REAL,
     predicted_happiness REAL
 )
@@ -33,7 +32,7 @@ conn.commit()
 print("tabla 'predictions' reiniciada")
 
 # Cargar modelo
-model = joblib.load("models/happiness_model.pkl")
+model = joblib.load("models/random_forest_model.pkl")
 
 # Configuración de Kafka
 KAFKA_TOPIC = "happiness_data"
@@ -54,18 +53,18 @@ print("Esperando mensajes desde Kafka...\n")
 for message in consumer:
     data = message.value
 
-    features = ["gdp_per_capita", "social_support", "life_expectancy", "freedom", "generosity", "corruption"]
+    features = ["gdp_per_capita", "social_support", "life_expectancy", "freedom", "corruption"]
     X = pd.DataFrame([data])[features]
     prediction = model.predict(X)[0]
 
     cursor.execute("""
         INSERT INTO predictions (
             country, year, gdp_per_capita, social_support, life_expectancy,
-            freedom, generosity, corruption, predicted_happiness
-        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            freedom, corruption, predicted_happiness
+        ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
     """, (
         data["country"], data["year"], data["gdp_per_capita"], data["social_support"],
-        data["life_expectancy"], data["freedom"], data["generosity"],
+        data["life_expectancy"], data["freedom"],
         data["corruption"], float(prediction)
     ))
     conn.commit()
