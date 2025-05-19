@@ -32,7 +32,7 @@ conn.commit()
 print("tabla 'predictions' reiniciada")
 
 # Cargar modelo
-model = joblib.load("models/random_forest_model.pkl")
+model = joblib.load("models/stacking_tuned_meta_model.pkl")
 
 # Configuración de Kafka
 KAFKA_TOPIC = "happiness_data"
