@@ -52,10 +52,9 @@ def prepare_features(raw_data: dict) -> np.ndarray:
     # Derivadas
     df["gdp_life_combo"] = df["gdp_per_capita"] * df["life_expectancy"]
     df["support_per_gdp"] = df["social_support"] / (df["gdp_per_capita"] + 1e-5)
-    df["freedom_corr"] = df["freedom"] * df["corruption"]
 
     # Polinómicas
-    poly_input = df[["gdp_per_capita", "social_support", "freedom", "corruption", "life_expectancy"]]
+    poly_input = df[["gdp_per_capita", "social_support", "life_expectancy"]]
     X_poly = poly.transform(poly_input)
     poly_feature_names = poly.get_feature_names_out(poly_input.columns)
     df_poly = pd.DataFrame(X_poly, columns=poly_feature_names)

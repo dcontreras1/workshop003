@@ -1,47 +1,69 @@
 import streamlit as st
 import pandas as pd
 import psycopg2
-import time
 import json
+import time
 
-with open("config/credentials.json", encoding="utf-8") as f:
-    creds = json.load(f)
+# Leer credenciales (cacheadas)
+@st.cache_resource(ttl=600)
+def get_connection_params():
+    with open("config/credentials.json", encoding="utf-8") as f:
+        return json.load(f)
 
-def get_data():
-    conn = psycopg2.connect(
-        host=creds['host'],
-        port=creds['port'],
-        dbname=creds['database'],
-        user=creds['user'],
-        password=creds['password']
+def get_connection():
+    creds = get_connection_params()
+    conn_str = (
+        f"host={creds['host']} port={creds['port']} dbname={creds['database']} "
+        f"user={creds['user']} password={creds['password']}"
     )
-    query = """
-        SELECT country, year, gdp_per_capita, social_support, life_expectancy,
-               freedom, generosity, corruption, predicted_happiness
-        FROM predictions
-        ORDER BY id DESC
-    """
-    df = pd.read_sql(query, conn)
-    conn.close()
-    return df
+    return psycopg2.connect(conn_str)
 
-# Streamlit App
-st.set_page_config(page_title="Happiness predictions", layout="wide")
-st.title("Happiness predictions")
+def fetch_all_data():
+    conn = get_connection()
+    try:
+        return pd.read_sql("SELECT * FROM predictions ORDER BY id ASC", conn)
+    finally:
+        conn.close()
 
-placeholder = st.empty()
+# Configuración general
+st.set_page_config(page_title="Happiness Stream", layout="wide")
+st.title("Predicción del Índice de Felicidad en Tiempo Real")
 
-while True:
-    with placeholder.container():
-        df = get_data()
+# Inicializar estado solo si no está
+if "full_data" not in st.session_state:
+    st.session_state.full_data = fetch_all_data()
+if "shown_data" not in st.session_state:
+    st.session_state.shown_data = pd.DataFrame(columns=["country", "predicted_happiness"])
+if "index" not in st.session_state:
+    st.session_state.index = 0
 
-        st.subheader("Last predictions")
-        st.dataframe(df.head(10), use_container_width=True)
+# Zonas dinámicas
+placeholder_chart = st.empty()
+placeholder_table = st.empty()
 
-        st.subheader("Happiness predictions distribution by country")
-        st.bar_chart(df.groupby("country")["predicted_happiness"].mean())
+# Mostrar tabla y gráfico actualizados
+def update_display():
+    df = st.session_state.shown_data
+    if not df.empty:
+        grouped = df.groupby("country")["predicted_happiness"].mean().sort_values(ascending=False)
+        placeholder_chart.bar_chart(grouped)
+        placeholder_table.dataframe(df, use_container_width=True)
 
-        st.subheader("Yearly happiness trend")
-        st.line_chart(df.groupby("year")["predicted_happiness"].mean())
+# Simular flujo fila por fila
+if st.session_state.index < len(st.session_state.full_data):
+    next_row = st.session_state.full_data.iloc[st.session_state.index]
+    st.session_state.shown_data = pd.concat(
+        [st.session_state.shown_data, pd.DataFrame([next_row])],
+        ignore_index=True
+    )
+    st.session_state.index += 1
 
-    time.sleep(5)
+    update_display()
+
+    # Esperar 1 segundo antes del siguiente rerun
+    time.sleep(1)
+    st.rerun()
+
+else:
+    st.success("¡Todos los datos han sido visualizados!")
+    update_display()
