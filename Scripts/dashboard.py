@@ -4,7 +4,7 @@ import psycopg2
 import json
 import time
 
-# Leer credenciales (cacheadas)
+# Leer credenciales
 @st.cache_resource(ttl=600)
 def get_connection_params():
     with open("config/credentials.json", encoding="utf-8") as f:
@@ -60,10 +60,9 @@ if st.session_state.index < len(st.session_state.full_data):
 
     update_display()
 
-    # Esperar 1 segundo antes del siguiente rerun
     time.sleep(1)
     st.rerun()
 
 else:
-    st.success("¡Todos los datos han sido visualizados!")
+    st.success("Todos los datos han sido visualizados")
     update_display()

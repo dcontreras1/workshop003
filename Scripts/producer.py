@@ -19,9 +19,8 @@ PREDICTION_TOPIC = 'happiness_predictions'
 
 # Ruta del archivo de datos
 file_path = r"C:\Users\Danie\OneDrive\Escritorio\Workshop03\data\merged.csv"
-model_dir = "models"  # Asegúrate de que esta carpeta exista
+model_dir = "models"
 
-# Cargar datos
 try:
     df = pd.read_csv(file_path)
     print("Archivo cargado correctamente.")
@@ -32,7 +31,7 @@ except Exception as e:
     print(f"Error al leer el archivo CSV: {e}")
     exit()
 
-# Ingeniería de características (replicando el training)
+# feature engineering
 df["gdp_life_combo"] = df["gdp_per_capita"] * df["life_expectancy"]
 df["support_per_gdp"] = df["social_support"] / (df["gdp_per_capita"] + 1e-5)
 
@@ -49,7 +48,7 @@ features_extended = list(dict.fromkeys(
 ))
 target = "happiness_score"
 
-X = df_extended[features_extended].copy() # Usar una copia para evitar SettingWithCopyWarning
+X = df_extended[features_extended].copy()
 
 # Cargar el modelo XGBoost, scaler y poly features
 try:
@@ -69,15 +68,12 @@ if missing_cols:
     exit()
 extra_cols = set(X.columns) - set(loaded_features)
 if extra_cols:
-    X = X[loaded_features].copy() # Mantener solo las columnas necesarias
+    X = X[loaded_features].copy()
 
-# Escalar y transformar las características
 X_scaled = scaler.transform(X)
 
-# Realizar predicciones con el modelo XGBoost
 predictions = xgboost_model.predict(X_scaled)
 
-# Crear un DataFrame con las predicciones y el país
 predictions_df = pd.DataFrame({'country': df['country'], 'predicted_happiness': predictions})
 
 # Inicializar el productor de Kafka
@@ -100,7 +96,7 @@ for index, row in predictions_df.iterrows():
     try:
         producer.send(PREDICTION_TOPIC, value=data)
         print(f"Enviando predicción para {row['country']}: {row['predicted_happiness']:.4f}")
-        time.sleep(1) # Simular un flujo de datos en tiempo real
+        time.sleep(1)
     except Exception as e:
         print(f"Error al enviar mensaje a Kafka: {e}")
 

@@ -9,7 +9,7 @@ KAFKA_BOOTSTRAP_SERVERS = 'localhost:9092'
 PREDICTION_TOPIC = 'happiness_predictions'
 GROUP_ID = 'happiness_consumer_group'
 
-# Configuración de la base de datos PostgreSQL (asegúrate de tener un archivo credentials.json)
+# Configuración de la base de datos
 DATABASE_CONFIG_FILE = 'config/credentials.json'
 
 def get_db_credentials():
