@@ -7,7 +7,6 @@ Este proyecto implementa un pipeline completo de datos para predecir el índice 
 ## Contenido
 
 - [Objetivo](#objetivo)
-- [Estructura del Proyecto](#estructura-del-proyecto)
 - [Tecnologías](#tecnologías)
 - [Pipeline ETL](#pipeline-etl)
 - [EDA (Análisis Exploratorio de Datos)](#eda-análisis-exploratorio-de-datos)
