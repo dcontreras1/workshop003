@@ -98,7 +98,7 @@ Guardado en: `models/xgboost.pkl`
 - Realiza transformación con `scaler` y `poly`
 - Predice felicidad y guarda en PostgreSQL
 
-> ![terminal del consumer](image.png)
+> ![terminal del consumer](C:\Users\Danie\OneDrive\Escritorio\Workshop03\pictures\image.png)
 
 ---
 
@@ -110,7 +110,7 @@ Con `Streamlit`, se diseñó un dashboard que:
 - Visualiza felicidad promedio por país
 - Gráfica de evolución histórica
 
-> ![Streaming Dashboard](image-1.png)
+> ![Streaming Dashboard](C:\Users\Danie\OneDrive\Escritorio\Workshop03\pictures\image-1.png)
 ---
 
 ## Conclusiones
