@@ -64,8 +64,8 @@ El proceso ETL se ejecuta en `merge_data.py`:
   - `gdp_per_capita`, `life_expectancy`, `social_support` <-> `happiness_score`
 - Se evaluó la distribución de la felicidad y se graficó la importancia de variables
 
-> ![Matriz de correlación](C:\Users\Danie\OneDrive\Escritorio\Workshop03\pictures\matriz_corre.png)
-> ![Características más importantes](C:\Users\Danie\OneDrive\Escritorio\Workshop03\pictures\top caracteristicas.png)
+> ![Matriz de correlación](pictures/matriz_corre.png)
+> ![Características más importantes](pictures/top caracteristicas.png)
 
 ---
 
@@ -98,7 +98,7 @@ Guardado en: `models/xgboost.pkl`
 - Realiza transformación con `scaler` y `poly`
 - Predice felicidad y guarda en PostgreSQL
 
-> ![terminal del consumer](C:\Users\Danie\OneDrive\Escritorio\Workshop03\pictures\image.png)
+> ![terminal del consumer](pictures/image.png)
 
 ---
 
@@ -110,7 +110,7 @@ Con `Streamlit`, se diseñó un dashboard que:
 - Visualiza felicidad promedio por país
 - Gráfica de evolución histórica
 
-> ![Streaming Dashboard](C:\Users\Danie\OneDrive\Escritorio\Workshop03\pictures\image-1.png)
+> ![Streaming Dashboard](pictures/image-1.png)
 ---
 
 ## Conclusiones
