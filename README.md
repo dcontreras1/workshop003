@@ -30,42 +30,6 @@ Desarrollar un sistema predictivo y visual que integre:
 
 ---
 
-## Estructura del Proyecto
-
-Workshop03/
-│
-├── data/
-│ ├── 2015.csv
-│ ├── 2016.csv
-│ ├── 2017.csv
-│ ├── 2018.csv
-│ ├── 2019.csv
-│ └── merged.csv
-│
-├── docker/
-│ └── docker-compose.yml
-│
-├── models/ # Modelos y transformadores
-│ ├── xgboost.pkl
-│ ├── scaler.pkl
-│ ├── poly_features.pkl
-│ └── features_extended.pkl
-│
-├── Notebooks/ # Análisis exploratorio de los datos y entrenamiento del modelo
-│ ├── EDA_data.ipynb
-│ └── modeltraining-ipynb
-│
-├── scripts/ # producer, consumer y merge_data
-│ ├── producer.py
-│ ├── merge_data.py
-│ └── consumer.py
-│
-├── config/credentials.json
-├── README.md
-└── requirements.txt
-
----
-
 ## Tecnologías
 
 - **Python**
