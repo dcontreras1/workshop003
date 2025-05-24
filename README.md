@@ -64,8 +64,8 @@ El proceso ETL se ejecuta en `merge_data.py`:
   - `gdp_per_capita`, `life_expectancy`, `social_support` <-> `happiness_score`
 - Se evaluó la distribución de la felicidad y se graficó la importancia de variables
 
-> ![Matriz de correlación](C:\Users\Danie\Downloads\matriz_corre.png)
-> ![Características más importantes](C:\Users\Danie\Downloads\top caracteristicas.png)
+> ![Matriz de correlación](C:\Users\Danie\OneDrive\Escritorio\Workshop03\pictures\matriz_corre.png)
+> ![Características más importantes](C:\Users\Danie\OneDrive\Escritorio\Workshop03\pictures\top caracteristicas.png)
 
 ---
 
