@@ -1,4 +1,3 @@
-# producer.py
 import pandas as pd
 import numpy as np
 import os
@@ -19,8 +18,9 @@ PREDICTION_TOPIC = 'happiness_predictions'
 
 # Ruta del archivo de datos
 file_path = r"C:\Users\Danie\OneDrive\Escritorio\Workshop03\data\merged.csv"
-model_dir = "models"
+model_dir = "models"  # Asegúrate de que esta carpeta exista
 
+# Cargar datos
 try:
     df = pd.read_csv(file_path)
     print("Archivo cargado correctamente.")
@@ -31,7 +31,7 @@ except Exception as e:
     print(f"Error al leer el archivo CSV: {e}")
     exit()
 
-# feature engineering
+# Ingeniería de características (replicando el training)
 df["gdp_life_combo"] = df["gdp_per_capita"] * df["life_expectancy"]
 df["support_per_gdp"] = df["social_support"] / (df["gdp_per_capita"] + 1e-5)
 
@@ -44,7 +44,7 @@ df_poly = pd.DataFrame(X_poly, columns=poly_feature_names)
 df_extended = pd.concat([df, df_poly], axis=1)
 
 features_extended = list(dict.fromkeys(
-    [col for col in df_extended.columns if col not in ["happiness_score", "country"]]
+    [col for col in df_extended.columns if col not in ["happiness_score", "country", "generosity"]]
 ))
 target = "happiness_score"
 
@@ -74,7 +74,16 @@ X_scaled = scaler.transform(X)
 
 predictions = xgboost_model.predict(X_scaled)
 
-predictions_df = pd.DataFrame({'country': df['country'], 'predicted_happiness': predictions})
+# Crear un DataFrame con los datos que se enviarán
+predictions_df = pd.DataFrame({
+    'country': df['country'],
+    'gdp_per_capita': df['gdp_per_capita'],
+    'social_support': df['social_support'],
+    'life_expectancy': df['life_expectancy'],
+    'freedom': df['freedom'],
+    'corruption': df['corruption'],
+    'predicted_happiness': predictions
+})
 
 # Inicializar el productor de Kafka
 try:
@@ -87,16 +96,13 @@ except Exception as e:
     print(f"Error al conectar con Kafka: {e}")
     exit()
 
-# Enviar las predicciones a Kafka
+# Enviar los datos a Kafka
 for index, row in predictions_df.iterrows():
-    data = {
-        'country': row['country'],
-        'predicted_happiness': float(row['predicted_happiness'])
-    }
+    data = row.to_dict()
     try:
         producer.send(PREDICTION_TOPIC, value=data)
-        print(f"Enviando predicción para {row['country']}: {row['predicted_happiness']:.4f}")
-        time.sleep(1)
+        print(f"Enviando datos para {row['country']}: {data}")
+        time.sleep(1) # Simular un flujo de datos en tiempo real
     except Exception as e:
         print(f"Error al enviar mensaje a Kafka: {e}")
 
