@@ -12,13 +12,12 @@ from kafka import KafkaProducer
 import json
 import time
 
-# Configuración de Kafka
 KAFKA_BOOTSTRAP_SERVERS = 'localhost:9092'
 PREDICTION_TOPIC = 'happiness_predictions'
 
 # Ruta del archivo de datos
 file_path = r"C:\Users\Danie\OneDrive\Escritorio\Workshop03\data\merged.csv"
-model_dir = "models"  # Asegúrate de que esta carpeta exista
+model_dir = "models"
 
 # Cargar datos
 try:
@@ -102,7 +101,7 @@ for index, row in predictions_df.iterrows():
     try:
         producer.send(PREDICTION_TOPIC, value=data)
         print(f"Enviando datos para {row['country']}: {data}")
-        time.sleep(1) # Simular un flujo de datos en tiempo real
+        time.sleep(1) # Simular flujo
     except Exception as e:
         print(f"Error al enviar mensaje a Kafka: {e}")
 
