@@ -56,8 +56,6 @@ El proceso ETL se ejecuta en `merge_data.py`:
    - Expansión polinómica de 2º grado
 3. **Unificación**: Concatenación de todos los datos y guardado en `merged.csv`
 
-> *(Aquí una imagen del script de transformación y unificación)*
-
 ---
 
 ## EDA (Análisis Exploratorio de Datos)
